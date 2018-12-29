@@ -25,8 +25,7 @@ struct header
 struct msg
 {
 	struct header Header;
-		
-
+	
 };
 
 
@@ -49,8 +48,9 @@ int main(int argc, char **argv) {
     // Filling server information 
     servaddr.sin_family = AF_INET; 
     servaddr.sin_port = htons(PORT); 
-    servaddr.sin_addr.s_addr = inet_addr("10.12.218.65"); 
-      
+//    servaddr.sin_addr.s_addr = inet_addr("10.12.218.65"); 
+    servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
+  
     int n, len; 
    	
 	unsigned int sec = 1000000;
