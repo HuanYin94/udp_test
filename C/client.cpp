@@ -48,8 +48,8 @@ int main(int argc, char **argv) {
     // Filling server information 
     servaddr.sin_family = AF_INET; 
     servaddr.sin_port = htons(PORT); 
-//    servaddr.sin_addr.s_addr = inet_addr("10.12.218.65"); 
-    servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
+    servaddr.sin_addr.s_addr = inet_addr("10.12.218.65");
+//    servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
   
     int n, len; 
    	
@@ -62,12 +62,14 @@ int main(int argc, char **argv) {
 	Header.length = 0x0010;
 	Header.sec = 0;
 	Header.miliSec = 0;
-
-	memcpy(buffer, &Header, 16);
 	
 	int cnt = 0;
 	while(true)
 	{	
+        // change the id when sending
+        Header.ID = cnt + 1;
+        memcpy(buffer, &Header, sizeof(Header));
+
     	sendto(sockfd, (const char *)buffer, strlen(hello), 
     	    MSG_CONFIRM, (const struct sockaddr *) &servaddr,  
     	        sizeof(servaddr)); 
