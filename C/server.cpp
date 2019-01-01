@@ -10,6 +10,7 @@
   
 #define PORT     9999 
 #define MAXLINE 1024 
+#define BYTENUM 16
 
 struct header
 {
@@ -20,6 +21,15 @@ struct header
 	unsigned int sec;
 	unsigned int miliSec;
 };
+
+struct msg
+{
+    struct header Header;
+
+};
+
+
+
 
 // Driver code 
 int main() { 
@@ -51,10 +61,9 @@ int main() {
     } 
       
     int n;
-	socklen_t len; 
+    socklen_t len;
 
 	header Header_;
-
 
 	while(true)
 	{
@@ -64,12 +73,19 @@ int main() {
 	   
 //	 	printf("Test : %c\n", buffer[0]); 
 
-		buffer[n] = '\0'; 
-		printf("Client : %s\n", buffer); 
+//        buffer[n] = '\0';
+//        printf("Client : %s\n", buffer);
 
-		memcpy(&Header_, buffer, 16);
-		
-		printf("%04x\n", Header_.miliSec);
+        memcpy(&Header_, buffer, BYTENUM);
+
+        printf("------------------------------------- \n");
+        printf("%04x\n", Header_.flag);
+        printf("%04x\n", Header_.type);
+        printf("%d\n", Header_.ID);
+        printf("%d\n", Header_.length);
+        printf("%04x\n", Header_.sec);
+        printf("%04x\n", Header_.miliSec);
+
 	}
 //    sendto(sockfd, (const char *)hello, strlen(hello),  
 //        MSG_CONFIRM, (const struct sockaddr *) &cliaddr, 
