@@ -9,9 +9,9 @@
 #include <netinet/in.h> 
 
 
-#define PORT     9999 
+#define PORT    9999
 #define MAXLINE 1024 
-#define BYTENUM 16
+#define BYTENUM 60 // 16 for header only
 
 struct header
 {
@@ -44,7 +44,6 @@ struct msg
 int main(int argc, char **argv) {
     int sockfd; 
     char buffer[MAXLINE]; 
-    char *hello = "Hello from client"; 
     struct sockaddr_in     servaddr; 
   
     // Creating socket file descriptor 
@@ -61,39 +60,42 @@ int main(int argc, char **argv) {
     servaddr.sin_addr.s_addr = inet_addr("10.12.218.65");
 //    servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
      	
-	unsigned int sec = 1000000;
-	
+    // sleep rate
+    unsigned int sec = 1000000;
+
     msg Message;
 
     Message.Header.flag = 0xcece;
     Message.Header.type = 0x0001;
     Message.Header.ID = 0x0000;
     Message.Header.length = 16;
-    Message.Header.sec = 0x1111;
-    Message.Header.miliSec = 0x2222;
+    Message.Header.sec = 111;
+    Message.Header.miliSec = 222;
 
-    Message.mag_pose_x = 0;
-    Message.mag_pose_y = 0;
-    Message.mag_heading = 0;
+    Message.mag_pose_x = 0.00;
+    Message.mag_pose_y = 0.00;
+    Message.mag_heading = 0.00;
 
-    Message.wheel_velocity_FL = 0;
-    Message.wheel_velocity_FR = 0;
-    Message.wheel_velocity_RL = 0;
-    Message.wheel_velocity_RR = 0;
+    Message.wheel_velocity_FL = 0.00;
+    Message.wheel_velocity_FR = 0.00;
+    Message.wheel_velocity_RL = 0.00;
+    Message.wheel_velocity_RR = 0.00;
 
-    Message.wheel_angle_FL = 0;
-    Message.wheel_angle_FR = 0;
-    Message.wheel_angle_RL = 0;
-    Message.wheel_angle_RR = 0;
+    Message.wheel_angle_FL = 0.00;
+    Message.wheel_angle_FR = 0.00;
+    Message.wheel_angle_RL = 999.999;
+    Message.wheel_angle_RR = 0.00;
 
 	int cnt = 0;
 	while(true)
 	{	
         // change the id when sending. ID ++
-        Header.ID = cnt + 1;
-        memcpy(buffer, &Header, BYTENUM);
+        Message.Header.ID = cnt + 1;
+        Message.mag_pose_x = Message.mag_pose_x + 1.00;
 
-    	sendto(sockfd, (const char *)buffer, strlen(hello), 
+        memcpy(buffer, &Message, sizeof(Message));
+
+        sendto(sockfd, (const char *)buffer, sizeof(Message),
     	    MSG_CONFIRM, (const struct sockaddr *) &servaddr,  
     	        sizeof(servaddr)); 
 
